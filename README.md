@@ -9,20 +9,13 @@ In the preprocessed data, the
 (6) Stop word removal, Tokenization, Stemming is done.
 
 ##
-In Feature Extraction
+In Feature Extraction a dictionary is created of feature vectors and labels. Feature vector is in the form of a list of 0's and 1's where 0 means a word is not present in the tweet and 1 means it is present#
 ##
-a dictionary is created of feature vectors and labels.
-##
-feature vector is in the form of a list of 0's and 1's
-##
-where 0 means a word is not present in the tweet and 1 means it is present
-##
-##
-labels
+Labels : 
 ##
 0 - positive
-##
+#
 1 - negative
-##
+#
 2 - neutral
-##
+#
