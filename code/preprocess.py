@@ -1,6 +1,5 @@
 # encoding=utf8  
 import sys  
-#sys.setdefaultencoding('utf8')
 import nltk
 import re
 
@@ -140,7 +139,7 @@ def preprocess(lines, newfile):
 
 			#discard the tokens which are punctuation marks
 			try:
-				if sent[j] in punctuation_list: #punctuation_dict[sent[j]]: # or re.compile("\.+").match(sent[j])):
+				if sent[j] in punctuation_list: 
 					j += 1
 					if j == l_sent:
 						break
@@ -153,7 +152,6 @@ def preprocess(lines, newfile):
 					final_sent.append(sent[j])		
 			except:
 				pass
-			#final_sent.append(sent[j])
 
 			j += 1
 			if j == l_sent:
@@ -177,7 +175,7 @@ def main():
 	getDicts()
 	file1 = "cleanedtraining.data"
 	file2 = "cleanedtesting.data"
-	#preprocess(read_file(file1), "preprocessedTraining.data")
+	preprocess(read_file(file1), "preprocessedTraining.data")
 	preprocess(read_file(file2), "preprocessedTesting.data")
 
 if __name__ == '__main__':
