@@ -7,3 +7,22 @@ In the preprocessed data, the
 (4) The emoticons are replaced by e1 or e0 oe e-1 based od their sentiment. 
 (5) The acronyms are expanded using acronym dictionary
 (6) Stop word removal, Tokenization, Stemming is done.
+
+##
+In Feature Extraction
+##
+a dictionary is created of feature vectors and labels.
+##
+feature vector is in the form of a list of 0's and 1's
+##
+where 0 means a word is not present in the tweet and 1 means it is present
+##
+##
+labels
+##
+0 - positive
+##
+1 - negative
+##
+2 - neutral
+##
