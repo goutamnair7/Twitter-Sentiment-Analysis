@@ -19,3 +19,5 @@ Labels :
 #
 2 - neutral
 #
+
+Classification of tweets is acheived using an SVM classifier. This outputs a final accuracy of tweets being classified on the test data.
