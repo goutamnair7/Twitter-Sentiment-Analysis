@@ -9,18 +9,18 @@ featureList = []
 tweets = []
 
 def getFeatureVector(tweet):
-	featureVector = []
+    featureVector = []
     #split tweet into words
-   	words = tweet.split()
-   	for w in words:
-   		#strip punctuation
-		w = w.strip('\'"?,.')
-		#check if the word stats with an alphabet
-		val = re.search(r"^[a-zA-Z][a-zA-Z0-9]*$", w)
-		if(w in stopWords or val is None):
-			continue
-		featureVector.append(w.lower())
-	return featureVector
+    words = tweet.split()
+    for w in words:
+        #strip punctuation
+        w = w.strip('\'"?,.')
+        #check if the word stats with an alphabet
+        val = re.search(r"^[a-zA-Z][a-zA-Z0-9]*$", w)
+        if(w in stopWords or val is None):
+            continue
+        featureVector.append(w.lower())
+    return featureVector
 
 
 
@@ -59,26 +59,26 @@ def getFeatureListAndLabels(tweets, featureList):
 
 
 def main():
-	global featureList
-	with open('preprocessedTraining.data','rb') as f:	
-		reader=csv.reader(f, delimiter='\t')
-		l=list(reader)
+    global featureList
+    with open('../data/preprocessedTraining.data','rb') as f:   
+        reader=csv.reader(f, delimiter='\t')
+        l=list(reader)
 
-	for row in l:
-		sentiment=row[2]
-		tweet=row[3]
-		tweet=tweet[:-2]			# ignoring hashcounts
-		featureVector = getFeatureVector(tweet)
-		featureList.extend(featureVector)
-		tweets.append((featureVector, sentiment))
-
-
-	# Remove featureList duplicates
-	featureList = list(set(featureList))	
+    for row in l:
+        sentiment=row[2]
+        tweet=row[3]
+        tweet=tweet[:-2]            # ignoring hashcounts
+        featureVector = getFeatureVector(tweet)
+        featureList.extend(featureVector)
+        tweets.append((featureVector, sentiment))
 
 
-	result = getFeatureListAndLabels(tweets, featureList)
+    # Remove featureList duplicates
+    featureList = list(set(featureList))    
 
+
+    result = getFeatureListAndLabels(tweets, featureList)
+    return result
 
 if __name__ == '__main__':
-	main()
+    main()
