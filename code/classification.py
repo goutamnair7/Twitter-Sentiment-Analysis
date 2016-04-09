@@ -31,9 +31,18 @@ def obtain_test_data():
         tweet = row[3]
         tweet = tweet[:-2]            # ignoring hashcounts
         featureVector = featureExtraction.getFeatureVector(tweet)
-        featureList.extend(featureVector)
+        #featureList.extend(featureVector)
         tweets.append((featureVector, sentiment))
 
+    with open('../data/preprocessedTraining.data','rb') as f:   
+        reader = csv.reader(f, delimiter='\t')
+        l = list(reader)
+    for row in l:
+        sentiment = row[2]
+        tweet = row[3]
+        tweet = tweet[:-2]            # ignoring hashcounts
+        featureVector = featureExtraction.getFeatureVector(tweet)
+        featureList.extend(featureVector)
     # Remove featureList duplicates
     featureList = list(set(featureList))    
     result = featureExtraction.getFeatureListAndLabels(tweets, featureList)
@@ -56,6 +65,7 @@ def main():
     train_classifier(train_data)
     test_data = obtain_test_data()
     labels, accuracy, values = test_classifier(test_data)
+    print accuracy 	
 
 if __name__ == '__main__':
     main()
