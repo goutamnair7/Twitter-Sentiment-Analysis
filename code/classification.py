@@ -14,6 +14,7 @@ def train_classifier(train_data):
 
     problem = svm_problem(labels, feature_vector)
     param = svm_parameter('-q')  #suppress console output
+    param.C = 10
     param.kernel_type = LINEAR
     classifier = svm_train(problem, param)
 
@@ -43,11 +44,22 @@ def test_classifier(test_data):
     ''' Classification of test data'''
 
     global classifier
-    l = len(test_data['labels'])
-    y = [0]*l
+    y = []
+    for i in test_data['labels']:
+        y.append(float(i))
     test_feature_vector = test_data['feature_vector']
     p_labels, p_accs, p_vals = svm_predict(y, test_feature_vector, classifier)
     return p_labels, p_accs, p_vals
+
+def get_confusion_matrix(labels, test_data):
+    ''' Confusion Matrix '''
+
+    matrix = {0:{0:0, 1:0, 2:0}, 1:{0:0, 1:0, 2:0}, 2:{0:0, 1:0, 2:0}}
+    l = len(labels)
+    for i in range(l):
+        matrix[int(test_data['labels'][i])][int(labels[i])] += 1
+
+    return matrix
 
 def main():
     ''' Control function for classification of tweets '''
@@ -56,6 +68,62 @@ def main():
     train_classifier(train_data)
     test_data = obtain_test_data()
     labels, accuracy, values = test_classifier(test_data)
+    matrix = get_confusion_matrix(labels, test_data)
+
+    print "\nConfusion Matrix: "
+    print "\t%6d\t|%2d   |%2d   |" % (0, 1, 2)
+    print "\t-----------------------------"
+    for i in range(0, 3):
+        print "\t", i, "|",
+        for j in range(0, 3):
+            print "%4d|" % matrix[i][j],
+        print
+    
+    print "\nPrecision: "
+    sum_precision = 0
+    p = []
+    for i in range(0, 3):
+        print "\tLabel " + str(i) + ":",
+        tp = matrix[i][i]
+        fp = 0
+        for j in range(0, 3):
+            if j != i:
+                fp += matrix[j][i] 
+        precision = float((tp*1.0)/(tp + fp))
+        sum_precision += precision
+        p.append(precision)
+        print precision
+    avg_precision = float(sum_precision)/3.0
+    print "Average precision: ", avg_precision
+
+    print "\nRecall: "
+    sum_recall = 0
+    r = []
+    for i in range(0, 3):
+        print "\tLabel " + str(i) + ":",
+        tp = matrix[i][i]
+        fn = 0
+        for j in range(0, 3):
+            if j != i:
+                fn += matrix[i][j] 
+        recall = float((tp*1.0)/(tp + fn))
+        sum_recall += recall
+        r.append(recall)
+        print recall
+    avg_recall = float(sum_recall)/3.0
+    print "Average recall: ", avg_recall
+
+    print "\nF1 score: "
+    sum_score = 0
+    for i in range(0, 3):
+        print "\tLabel " + str(i) + ":",
+        den = p[i] + r[i]
+        num = 2 * p[i] * r[i]
+        score = float(num)/den
+        sum_score += score
+        print score
+    avg_score = float(sum_score)/3.0
+    print "Average F1 score: ", avg_score
 
 if __name__ == '__main__':
     main()
