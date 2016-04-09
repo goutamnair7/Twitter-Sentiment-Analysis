@@ -2,6 +2,8 @@ import csv
 import re
 import nltk
 import pickle
+from nltk.collocations import BigramCollocationFinder
+from nltk.metrics import BigramAssocMeasures
 
 stopWords=['||T||','||U||']
 
@@ -12,7 +14,7 @@ def getFeatureVector(tweet):
     featureVector = []
     #split tweet into words
     words = tweet.split()
-    for w in words:
+    for w in words:   #Unigram model
         #strip punctuation
         w = w.strip('\'"?,.')
         #check if the word stats with an alphabet
@@ -20,8 +22,23 @@ def getFeatureVector(tweet):
         if(w in stopWords or val is None):
             continue
         featureVector.append(w.lower())
-    return featureVector
 
+    bigram_finder = BigramCollocationFinder.from_words(words)
+    score_fn = BigramAssocMeasures.chi_sq
+    bigrams = bigram_finder.nbest(score_fn, 10)
+
+    for tokens in bigrams:  #Bi-gram model
+        word1 = tokens[0]
+        word2 = tokens[1]
+        val1 = re.search(r"^[a-zA-Z][a-zA-Z0-9]*$", word1)
+        val2 = re.search(r"^[a-zA-Z][a-zA-Z0-9]*$", word2)
+        
+        if((word1 in stopWords or word2 in stopWords) or (val1 is None or val2 is None)):
+            continue
+        token = word1.lower() + ' ' + word2.lower()
+        featureVector.append(token)
+    
+    return featureVector
 
 
 def getFeatureListAndLabels(tweets, featureList):
@@ -72,11 +89,8 @@ def main():
         featureList.extend(featureVector)
         tweets.append((featureVector, sentiment))
 
-
     # Remove featureList duplicates
     featureList = list(set(featureList))    
-
-
     result = getFeatureListAndLabels(tweets, featureList)
     return result
 
