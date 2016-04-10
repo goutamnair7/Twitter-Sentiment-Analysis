@@ -37,7 +37,6 @@ def getFeatureVector(tweet):
         if((word1 in stopWords or word2 in stopWords) or (val1 is None or val2 is None)):
             continue
         token = word1.lower() + ' ' + word2.lower()
-	print token
         featureVector.append(token)
     
     return featureVector
