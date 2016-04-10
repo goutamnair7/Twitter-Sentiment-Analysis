@@ -15,6 +15,7 @@ def getFeatureVector(tweet):
     featureVector = []
     #split tweet into words
     words = tweet.split()
+    patt=re.compile(r"(.)\1{1,}", re.DOTALL)
     for w in words:   #Unigram model
         #strip punctuation
         w = w.strip('\'"?,.')
@@ -22,8 +23,15 @@ def getFeatureVector(tweet):
         val = re.search(r"^[a-zA-Z][a-zA-Z0-9]*$", w)
         if(w in stopWords or val is None):
             continue
+        w=w.lower()
+        #remove multpile occurances of a character
+        w=patt.sub(r"\1\1", w)    
         featureVector.append(w.lower())
+    
+    # comment this for bigram
+    return featureVector       
 
+    
     bigram_finder = BigramCollocationFinder.from_words(words)
     score_fn = BigramAssocMeasures.chi_sq
     bigrams = bigram_finder.nbest(score_fn, 10)
@@ -36,6 +44,10 @@ def getFeatureVector(tweet):
         
         if((word1 in stopWords or word2 in stopWords) or (val1 is None or val2 is None)):
             continue
+        word1=word1.lower()
+        word2=word2.lower()
+        word1=patt.sub(r"\1", word1)
+        word2=patt.sub(r"\1",word2)    
         token = word1.lower() + ' ' + word2.lower()
         featureVector.append(token)
     
@@ -82,7 +94,7 @@ def getFeatureListAndLabels(tweets, featureList):
             label = 0
         elif(tweet_opinion == 'negative'):
             label = 1
-        elif(tweet_opinion == 'neutral'):
+        else:
             label = 2
         labels.append(label)
     #return the list of feature_vector and labels
