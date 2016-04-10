@@ -4,6 +4,7 @@ import nltk
 import pickle
 from nltk.collocations import BigramCollocationFinder
 from nltk.metrics import BigramAssocMeasures
+from nltk.corpus import wordnet as wn
 
 stopWords=['||T||','||U||']
 
@@ -36,6 +37,7 @@ def getFeatureVector(tweet):
         if((word1 in stopWords or word2 in stopWords) or (val1 is None or val2 is None)):
             continue
         token = word1.lower() + ' ' + word2.lower()
+	print token
         featureVector.append(token)
     
     return featureVector
@@ -61,6 +63,19 @@ def getFeatureListAndLabels(tweets, featureList):
             #set map[word] to 1 if word exists
             if word in map:
                 map[word] = 1
+	    #look for synonyms    
+            else:
+                flag=0
+                for i,j in enumerate(wn.synsets(word)):
+                    syns=j.lemma_names
+                    for syn in syns:
+                        if syn in map:
+                            map[syn]=1
+                            flag=1
+                            break        
+                    if flag==1:
+                        break      
+
         #end for loop
         values = map.values()
         feature_vector.append(values)
