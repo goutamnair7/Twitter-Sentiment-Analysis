@@ -20,10 +20,19 @@ def train_classifier(train_data):
 
 def obtain_test_data():
     ''' Obtain testing data for the classifier'''
-    
     featureList = []
     tweets = []
     with open('../data/preprocessedTesting.data','rb') as f:   
+        reader = csv.reader(f, delimiter='\t')
+        l = list(reader)
+    for row in l:
+        sentiment = row[2]
+        tweet = row[3]
+        tweet = tweet[:-2]            # ignoring hashcounts
+        featureVector = featureExtraction.getFeatureVector(tweet)
+#        featureList.extend(featureVector)
+        tweets.append((featureVector, sentiment))
+    with open('../data/preprocessedTraining.data','rb') as f:   
         reader = csv.reader(f, delimiter='\t')
         l = list(reader)
 
@@ -33,7 +42,6 @@ def obtain_test_data():
         tweet = tweet[:-2]            # ignoring hashcounts
         featureVector = featureExtraction.getFeatureVector(tweet)
         featureList.extend(featureVector)
-        tweets.append((featureVector, sentiment))
 
     # Remove featureList duplicates
     featureList = list(set(featureList))    
