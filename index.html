@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Twitter-sentiment-analysis by goutamnair7</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Twitter-sentiment-analysis</h1>
+        <p></p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/goutamnair7/Twitter-Sentiment-Analysis" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/goutamnair7/Twitter-Sentiment-Analysis/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/goutamnair7/Twitter-Sentiment-Analysis/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>
+<a id="twitter-sentiment-analysis" class="anchor" href="#twitter-sentiment-analysis" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Twitter Sentiment Analysis</h1>
+
+<hr>
+
+<h2>
+<a id="problem-statement" class="anchor" href="#problem-statement" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Problem statement</h2>
+
+<p>This project aims to extract the features of tweets and analyze the opinion of tweets as positive, negative or neutral.</p>
+
+<ul>
+<li>Input: Textual content of a tweet</li>
+<li>Output: Label signifying if the sentiment of the tweet is positive/negative/neutral</li>
+</ul>
+
+<h2>
+<a id="motivation" class="anchor" href="#motivation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Motivation</h2>
+
+<p>Tweets sometimes express opinions about different topics. These opinions are important in many business-related decisions and even political sentiments about a candidate.</p>
+
+<ul>
+<li>Consumers can use sentiment analysis to research products or services before making a purchase. E.g. Kindle</li>
+<li>Marketers can use this to research public opinion of their company and products, or to analyze customer satisfaction. E.g. Election Polls</li>
+<li>Organizations can also use this to gather critical feedback about problems in newly released products. E.g. Brand Management (Nike, Adidas)</li>
+</ul>
+
+<h2>
+<a id="challenges-faced" class="anchor" href="#challenges-faced" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Challenges faced</h2>
+
+<ul>
+<li>Noisy text (Misspellings, lack of grammar)</li>
+<li>Lack of context</li>
+<li>Acronyms e.g: lol, brb, gr8</li>
+<li>Emoticons e.g: :), :(</li>
+<li>Negation</li>
+</ul>
+
+<h2>
+<a id="pipeline-for-approach-used" class="anchor" href="#pipeline-for-approach-used" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pipeline for approach used</h2>
+
+<p><img src="https://raw.githubusercontent.com/goutamnair7/Twitter-Sentiment-Analysis/master/Twitter%20Sentiment%20Analyzer.png" alt="Pipeline"></p>
+
+<h3>
+<a id="tweet-downloader" class="anchor" href="#tweet-downloader" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tweet downloader</h3>
+
+<ul>
+<li>Download the tweets using twitter API (<a href="https://github.com/aritter/twitter_download">https://github.com/aritter/twitter_download</a>).</li>
+<li>9684 training and 8987 testing tweets are downloaded.</li>
+</ul>
+
+<h3>
+<a id="parser" class="anchor" href="#parser" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Parser</h3>
+
+<ul>
+<li>The parser removes all unavailable tweets from the downloaded data</li>
+<li>After removing these we have 7612 tweets for training and 7868 tweets for testing</li>
+</ul>
+
+<h3>
+<a id="pre-processing" class="anchor" href="#pre-processing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pre-processing</h3>
+
+<ul>
+<li>Replace Emoticons by their polarity.</li>
+<li>Remove URLs and Targets.</li>
+<li>Expand acronyms. eg 'brb' to 'be right back'</li>
+<li>Remove stop words</li>
+<li>Tokenization</li>
+<li>Stemming</li>
+<li>Case-folding</li>
+<li>Remove punctuation marks</li>
+<li>Replace sequence of repeating characters eg. 'hellooooo' by 'helloo'</li>
+</ul>
+
+<h3>
+<a id="feature-extraction" class="anchor" href="#feature-extraction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Feature Extraction</h3>
+
+<ul>
+<li>The pre-processed data file is fed to the feature extractor which creates the feature vector.</li>
+<li>The basic (baseline) feature was the unigram model</li>
+<li>A list of all unique unigrams across the training set was constructed and it formed the basic vector for each tweet.</li>
+</ul>
+
+<h3>
+<a id="additional-features" class="anchor" href="#additional-features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Additional Features</h3>
+
+<ul>
+<li>Polarity scores of the tweets</li>
+<li>Negation</li>
+<li>Hashtags</li>
+<li>Special characters (?,!,*)</li>
+<li>Capitalized words</li>
+<li>Bigrams</li>
+</ul>
+
+<h3>
+<a id="svm-classification-and-prediction" class="anchor" href="#svm-classification-and-prediction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>SVM Classification and Prediction</h3>
+
+<ul>
+<li>The features extracted are passed to the classifier</li>
+<li>The model built is used to predict the sentiment of the new tweets</li>
+</ul>
+
+<h2>
+<a id="results" class="anchor" href="#results" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Results</h2>
+
+<table>
+<thead>
+<tr>
+<th>Features</th>
+<th>Accuracy</th>
+<th>Precision</th>
+<th>Recall</th>
+<th>F1 score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unigram</td>
+<td>54.855%</td>
+<td>0.5264</td>
+<td>0.5061</td>
+<td>0.5125</td>
+</tr>
+<tr>
+<td>Unigram + Additional Features</td>
+<td>57.079%</td>
+<td>0.5524</td>
+<td>0.5308</td>
+<td>0.5385</td>
+</tr>
+<tr>
+<td>Bigram</td>
+<td>58.579%</td>
+<td>0.5713</td>
+<td>0.5172</td>
+<td>0.5268</td>
+</tr>
+<tr>
+<td>Bigram  + Additional Features</td>
+<td>60.739%</td>
+<td>0.5930</td>
+<td>0.5525</td>
+<td>0.5637</td>
+</tr>
+</tbody>
+</table>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/goutamnair7">goutamnair7</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
