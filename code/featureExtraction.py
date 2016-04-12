@@ -31,7 +31,7 @@ def getFeatureVector(tweet):
     # comment this for bigram
     return featureVector       
 
-    
+
     bigram_finder = BigramCollocationFinder.from_words(words)
     score_fn = BigramAssocMeasures.chi_sq
     bigrams = bigram_finder.nbest(score_fn, 10)

@@ -2,6 +2,7 @@ import svm
 import csv
 from svmutil import *
 import featureExtraction
+import nltk
 
 classifier = ''
 
@@ -11,6 +12,18 @@ def train_classifier(train_data):
     global classifier
     labels = train_data['labels']
     feature_vector = train_data['feature_vector']
+
+    # extending the feature vector
+    with open('../data/featuresTraining.data','rt') as f:   
+        reader=csv.reader(f, delimiter=' ')
+        l=list(reader)
+
+    rownum=0
+    for row in l:
+        features=[int(i) for i in row[-16:-1]]
+        feature_vector[rownum].extend(features)
+        rownum+=1
+
 
     problem = svm_problem(labels, feature_vector)
     param = svm_parameter('-q')  #suppress console output
@@ -56,6 +69,18 @@ def test_classifier(test_data):
     for i in test_data['labels']:
         y.append(float(i))
     test_feature_vector = test_data['feature_vector']
+
+     # extending the feature vector
+    with open('../data/featuresTesting.data','rt') as f:   
+        reader=csv.reader(f, delimiter=' ')
+        l=list(reader)
+
+    rownum=0
+    for row in l:
+        features=[int(i) for i in row[-16:-1]]
+        test_feature_vector[rownum].extend(features)
+        rownum+=1
+
     p_labels, p_accs, p_vals = svm_predict(y, test_feature_vector, classifier)
     return p_labels, p_accs, p_vals
 
